@@ -1,7 +1,64 @@
+const taxBracketInfo = [
+	{
+		"grossIncomeMinimum": 0,
+		"grossIncomeLimit": 540000,
+		"netTaxLimit": 27000,
+		"netIncomeLimit": 513000,
+		"taxRate": 0.05
+	},
+	{
+		"grossIncomeMinimum": 540001,
+		"grossIncomeLimit": 1210000,
+		"netTaxLimit": 80400,
+		"netIncomeLimit": 589600,
+		"taxRate": 0.12
+	},
+	{
+		"grossIncomeMinimum": 1210001,
+		"grossIncomeLimit": 2420000,
+		"netTaxLimit": 242000,
+		"netIncomeLimit": 968000,
+		"taxRate": 0.2
+	},
+	{
+		"grossIncomeMinimum": 4530001,
+		"grossIncomeLimit": 4530000,
+		"netTaxLimit": 633000,
+		"netIncomeLimit": 1477000,
+		"taxRate": 0.3
+	},
+	{
+		"grossIncomeMinimum": 10310001,
+		"grossIncomeLimit": 10310000,
+		"netTaxLimit": 2312000,
+		"netIncomeLimit": 3468000,
+		"taxRate": 0.4
+	},
+	{
+		"grossIncomeMinimum": 10310001,
+		"taxRate": 0.45
+	}
+]
+
 
 const input = document.getElementById('income');
 const submit = document.getElementById('submit');
 
+// make references to each row in the first column (income limit column)
+
+const bracketIncomeLimits = document.querySelectorAll('.income-limit');
+for (i = 0; i < bracketIncomeLimits.length; i++) {
+	if (taxBracketInfo[i].grossIncomeLimit) {
+		bracketIncomeLimits[i].textContent = `up to $${taxBracketInfo[i].grossIncomeLimit.toLocaleString('en-us')}`
+	} else {
+		bracketIncomeLimits[i].textContent = `$${taxBracketInfo[5].grossIncomeMinimum.toLocaleString('en-us')}+`
+	}
+}
+
+const bracketTaxRates = document.querySelectorAll('.tax-rate');
+for (i = 0; i < bracketTaxRates.length; i++) {
+	bracketTaxRates[i].textContent = `${taxBracketInfo[i].taxRate*100}%`
+}
 
 //TAX VARIABLES HERE
 //create references to the table tax cells

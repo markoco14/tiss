@@ -35,7 +35,9 @@
 				<p>Enter your desired annual salary below to find out your taxes and net income. Your number must be without any '$'s and ','s (example: 5000).</p>
 				<div class='inputs-div'>
 					<input type='text' id='income' class='income page-title'>
-					<button id='submit' class='submit page-title'>Calculate</button>
+					<button id='submit' class='submit page-title'>
+						Calculate
+					</button>
 				</div>
 				<table>
 					<thead>
@@ -49,43 +51,44 @@
 					</thead>
 					<tbody class='table-info'>
 						<tr>
-							<td class='table-range'>up to <span id='table-first-bracket'>$540,000</span></td>
-							<td>5%</td>
+							<td id="first-income-limit" class='table-range income-limit'></td>
+							<td class='tax-rate'></td>
 							<!--<td id='firstGrossIncome'></td>-->
 							<td id='firstNetTax' class='no-tax-data'></td>
 							<td id='firstNetIncome' class='no-income-data'></td>
 						</tr>
 						<tr>
-							<td class='table-range'>up to <span id='table-second-bracket'>$1,210,000</span></td>
-							<td>12%</td>
+							<td id="second-income-limit" class='table-range income-limit'>
+							</td>
+							<td class='tax-rate'></td>
 							<!--<td id='secondGrossIncome'></td>-->
 							<td id='secondNetTax' class='no-tax-data'></td>
 							<td id='secondNetIncome' class='no-income-data'></td>
 						</tr>
 						<tr>
-							<td class='table-range'>up to <span id='table-third-bracket'>$2,420,000</span></td>
-							<td>20%</td>
+							<td id="third-income-limit" class='table-range income-limit'></td>
+							<td class='tax-rate'></td>
 							<!--<td id='thirdGrossIncome'></td>-->
 							<td id='thirdNetTax' class='no-tax-data'></td>
 							<td id='thirdNetIncome' class='no-income-data'></td>
 						</tr>
 						<tr>
-							<td class='table-range'>up to <span id='table-fourth-bracket'>$4,530,000</span></td>
-							<td>30%</td>
+							<td id="fourth-income-limit" class='table-range income-limit'></td>
+							<td class='tax-rate'></td>
 							<!--<td id='fourthGrossIncome'></td>-->
 							<td id='fourthNetTax' class='no-tax-data'></td>
 							<td id='fourthNetIncome' class='no-income-data'></td>
 						</tr>
 						<tr>
-							<td class='table-range'>up to <span id='table-fifth-bracket'>$10,310,000</span> </td>
-							<td>40%</td>
+							<td id="fifth-income-limit"class='table-range income-limit'></td>
+							<td class='tax-rate'></td>
 							<!--<td id='fifthGrossIncome'></td>-->
 							<td id='fifthNetTax' class='no-tax-data'></td>
 							<td id='fifthNetIncome'class='no-income-data'></td>
 						</tr>
 						<tr>
-							<td class='table-range'><span id='table-sixth-bracket'>$10,310,001</span>+ </td>
-							<td>45%</td>
+							<td id="sixth-income-limit" class='table-range income-limit'></td>
+							<td class='tax-rate'></td>
 							<!--<td id='sixthGrossIncome'></td>-->
 							<td id='sixthNetTax' class='no-tax-data'></td>
 							<td id='sixthNetIncome'class='no-income-data'></td>
@@ -179,6 +182,5 @@
 		<script src='taxCalculatorScript.js'></script>
 		<script src='buttonBarScript.js'></script>
 		<script src='incomeToggleScript.js'></script>
-
 	</body>
 </html>
