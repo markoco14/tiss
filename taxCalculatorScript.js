@@ -440,6 +440,32 @@ let sixthBracket = function() {
 
 }
 
+let formatInputValue = function() {
+	let cleanInput;
+	if (input.value.includes('$')) {
+		let index = input.value.indexOf('$');
+		cleanInput = input.value.slice(index+1, input.value.length)
+		console.log(cleanInput)
+		console.log(typeof(cleanInput))
+	}
+
+	const inputNumber = Number(cleanInput);
+	console.log(inputNumber)
+
+	const formatInputNumber = inputNumber.toLocaleString('en-us');
+	console.log(formatInputNumber)
+	// const inputNumber = Number(cleanInput);
+	// console.log(inputNumber)
+
+	// const inputString = cleanInput;
+	// console.log(inputString);
+	// let inputNumber = Number(inputString);
+	// console.log(inputNumber.toLocaleString('en-us'));
+	// input.value = `$${inputNumber.toLocaleString('en-us')}`;
+}
+
+input.addEventListener('keyup', formatInputValue);
+
 let userInput;
 //function to call tax functions on click
 let chooseFunction = function(whichFunctions) {
@@ -591,6 +617,7 @@ let chooseFunction = function(whichFunctions) {
 	
 	
 }	
+
 
 submit.addEventListener('click', chooseFunction);
 
