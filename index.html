@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+	<head>
+		<meta charset='utf-8'>
+		<meta name='viewport' content='width=device-width initial-scale=1.0 shrink-to-fit=no'>
+		<title>Taiwan Income Calculator</title>
+		<link rel='stylesheet' href='styles.css' >
+	</head>
+	<body>
+		<div class='head-container'>
+			<img 
+			src='images/relaxRead.jpg'
+			alt='A picture of a woman relaxing with a book. She does not need to worry about taxes.'
+			class='header-pic'
+			>
+			<div class='name-container'>
+				<h1>TISS</h1>
+			</div>
+		</div>
+		<div class='sub-container'>
+				<h2 class='body-text body-box'>Tax and Income Super simple</h2>
+				<p class='body-text body-box'> Planning to come to Taiwan and want to know exactly how much money you can make? TISS makes it simple. Choose how much money you want to make. See your taxes and net income in every income bracket. Then use the currency exchange to find out what that's worth back home. </p>
+		</div>
+			
+		<div class='flex-container'>
+			<div class='tax-box flex-item'>
+				<div id='salary-toggle' class='salary-toggle'>
+					<div id='salary-monthly' class='salary-off'>Monthly Salary</div>
+					<div id='salary-annual' class='salary-on'>Annual Salary</div>
+				</div>
+				<h2 class='table-title'>Income Calculator</h2>
+				<img src='images/flagTaiwan.png'
+					alt = 'An image of the Taiwan flag.'
+					class='selected-flag'>
+				<h3>Currency: New Taiwan Dollar </h3>
+				<p>Enter your desired annual salary below to find out your taxes and net income. Your number must be without any '$'s and ','s (example: 5000).</p>
+				<div class='inputs-div'>
+					<input type='text' id='income' class='income page-title'>
+					<button id='submit' class='submit page-title'>Calculate</button>
+				</div>
+				<table>
+					<thead>
+						<tr class='table-head'>
+							<th>Income Range</th>
+							<th>Tax %</th>
+							<!--<th class='gross-data'>Salary</th>-->
+							<th class='tax-data'>Taxes</th>
+							<th class='income-data'>Net Income</th>
+						</tr>
+					</thead>
+					<tbody class='table-info'>
+						<tr>
+							<td class='table-range'>up to <span id='table-first-bracket'>$540,000</span></td>
+							<td>5%</td>
+							<!--<td id='firstGrossIncome'></td>-->
+							<td id='firstNetTax' class='no-tax-data'></td>
+							<td id='firstNetIncome' class='no-income-data'></td>
+						</tr>
+						<tr>
+							<td class='table-range'>up to <span id='table-second-bracket'>$1,210,000</span></td>
+							<td>12%</td>
+							<!--<td id='secondGrossIncome'></td>-->
+							<td id='secondNetTax' class='no-tax-data'></td>
+							<td id='secondNetIncome' class='no-income-data'></td>
+						</tr>
+						<tr>
+							<td class='table-range'>up to <span id='table-third-bracket'>$2,420,000</span></td>
+							<td>20%</td>
+							<!--<td id='thirdGrossIncome'></td>-->
+							<td id='thirdNetTax' class='no-tax-data'></td>
+							<td id='thirdNetIncome' class='no-income-data'></td>
+						</tr>
+						<tr>
+							<td class='table-range'>up to <span id='table-fourth-bracket'>$4,530,000</span></td>
+							<td>30%</td>
+							<!--<td id='fourthGrossIncome'></td>-->
+							<td id='fourthNetTax' class='no-tax-data'></td>
+							<td id='fourthNetIncome' class='no-income-data'></td>
+						</tr>
+						<tr>
+							<td class='table-range'>up to <span id='table-fifth-bracket'>$10,310,000</span> </td>
+							<td>40%</td>
+							<!--<td id='fifthGrossIncome'></td>-->
+							<td id='fifthNetTax' class='no-tax-data'></td>
+							<td id='fifthNetIncome'class='no-income-data'></td>
+						</tr>
+						<tr>
+							<td class='table-range'><span id='table-sixth-bracket'>$10,310,001</span>+ </td>
+							<td>45%</td>
+							<!--<td id='sixthGrossIncome'></td>-->
+							<td id='sixthNetTax' class='no-tax-data'></td>
+							<td id='sixthNetIncome'class='no-income-data'></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class=total-container>
+					<div>
+						<p>Net Income:</p>
+						<p id='total-income'></p>
+					</div>
+					<div>
+						<p>Net Taxes:</p>
+						<p id='total-tax'></p>
+					</div>
+				</div>
+			</div>
+			<div class='flex-item currency-box'>
+				<h1 class='table-title'>Currency Exchange<sup>*</sup></h1>
+				<img src=''
+					alt =''
+					id='currency-flag'
+					class='selected-flag'>
+				<h3>Currency: <span id='selected-exchange'>New Taiwan Dollar</span> </h3>
+				<p> Choose your currency below to see how much your salary is worth in your home country. </p>
+
+				<div id='flag-bar' class='flag-container'>
+					<img src='images/flagCanada.png'
+						alt ='An image of the Canadian flag.'
+						id='canada-flag'
+						class='selector-img' 
+						value='CAD'>
+					<img src='images/flagUS.png' 
+						alt = 'An image of the American flag.'
+						id='us-flag'
+						class='selector-img' 
+						value='USD'>
+					<img src='images/flagAustralia.png' 
+						alt = 'An image of the Australian flag.'
+						id='aus-flag'
+					    class='selector-img' 
+					    value='AUD'>
+					<img src='images/flagUK.png'
+						alt = 'An image of the United Kingdom flag.'
+						id='uk-flag' 
+						class='selector-img'
+						value='GBP'>
+					<img src='images/flagIreland.png'
+						alt = 'An image of the Irish flag.'
+						id='ire-flag'
+						class='selector-img'
+						value="EUR">
+					<img src='images/flagNZ.png' 
+						alt = 'An image of the New Zealand flag.'
+						id='nz-flag'
+						class='selector-img'
+						value='NZD'>
+				</div>
+
+				<select id='select-currency' class='currency-selector'>
+					<option value=''>--Choose your currency--</option>
+					<option value='CAD'>Canadian dollars</option>
+					<option value='USD'>US dollars</option>
+					<option value='AUD'>Australian dollars</option>
+					<option value='EUR'>Euros</option>
+					<option value='GBP'>Great British pounds</option>
+					<option value='NZD'>New Zealand dollars</option>
+				</select>
+
+				<p class='subscript'><sup>*</sup>All currencies are updated daily using a third-party plugin. Conversions may not be exact and are for reference only.</p>
+				<div class='exchange-flex'>
+					<p>Your income in <span id='your-income'></span>:</p>
+					<p id='exchange-income'></p>
+				</div>
+				<div  class='exchange-flex exchange-flex-bottom'>
+					<p>Your taxes in <span id='your-tax'></span>:</p>
+					<p id='exchange-tax'></p>
+				</div>
+
+			</div>
+		</div> <!--//end of calculator and currency exchange container -->
+
+		<div class='footer'>
+			<p>TISS All Rights Reserved</p>
+			<p>Tax and Income Super Simple.</p>
+			<p> <a href='https://markoco14.github.io/'>Portfolio</a></p>
+		</div>
+
+		<!-- I don't know if the JS script is better in the body tag or the head tag !-->
+		<script src='exchangeScripts.js'></script>
+		<script src='taxCalculatorScript.js'></script>
+		<script src='buttonBarScript.js'></script>
+		<script src='incomeToggleScript.js'></script>
+
+	</body>
+</html>
