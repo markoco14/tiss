@@ -23,15 +23,15 @@
 			
 		<div class='flex-container'>
 			<div class='tax-box flex-item'>
-				<div id='salary-toggle' class='salary-toggle'>
-					<div id='salary-monthly' class='salary-off'>Monthly Salary</div>
-					<div id='salary-annual' class='salary-on'>Annual Salary</div>
-				</div>
 				<h2 class='table-title'>Income Calculator</h2>
 				<img src='images/flagTaiwan.png'
 					alt = 'An image of the Taiwan flag.'
 					class='selected-flag'>
 				<h3>Currency: New Taiwan Dollar </h3>
+				<div id='salary-toggle' class='salary-toggle'>
+					<div id='salary-monthly' class='salary-off'>Monthly Salary</div>
+					<div id='salary-annual' class='salary-on'>Annual Salary</div>
+				</div>
 				<p>Enter your desired annual salary below to find out your taxes and net income. Your number must be without any '$'s and ','s (example: 5000).</p>
 				<div class='inputs-div'>
 					<input type='text' id='income' class='income page-title'>
@@ -54,60 +54,60 @@
 							<td id="first-income-limit" class='table-range income-limit'></td>
 							<td class='tax-rate'></td>
 							<!--<td id='firstGrossIncome'></td>-->
-							<td id='firstNetTax' class='no-tax-data'></td>
-							<td id='firstNetIncome' class='no-income-data'></td>
+							<td id='firstNetTax' class='no-tax-data net-tax'></td>
+							<td id='firstNetIncome' class='no-income-data net-income'></td>
 						</tr>
 						<tr>
 							<td id="second-income-limit" class='table-range income-limit'>
 							</td>
 							<td class='tax-rate'></td>
 							<!--<td id='secondGrossIncome'></td>-->
-							<td id='secondNetTax' class='no-tax-data'></td>
-							<td id='secondNetIncome' class='no-income-data'></td>
+							<td id='secondNetTax' class='no-tax-data net-tax'></td>
+							<td id='secondNetIncome' class='no-income-data net-income'></td>
 						</tr>
 						<tr>
 							<td id="third-income-limit" class='table-range income-limit'></td>
 							<td class='tax-rate'></td>
 							<!--<td id='thirdGrossIncome'></td>-->
-							<td id='thirdNetTax' class='no-tax-data'></td>
-							<td id='thirdNetIncome' class='no-income-data'></td>
+							<td id='thirdNetTax' class='no-tax-data net-tax'></td>
+							<td id='thirdNetIncome' class='no-income-data net-income'></td>
 						</tr>
 						<tr>
 							<td id="fourth-income-limit" class='table-range income-limit'></td>
 							<td class='tax-rate'></td>
 							<!--<td id='fourthGrossIncome'></td>-->
-							<td id='fourthNetTax' class='no-tax-data'></td>
-							<td id='fourthNetIncome' class='no-income-data'></td>
+							<td id='fourthNetTax' class='no-tax-data net-tax'></td>
+							<td id='fourthNetIncome' class='no-income-data net-income'></td>
 						</tr>
 						<tr>
 							<td id="fifth-income-limit"class='table-range income-limit'></td>
 							<td class='tax-rate'></td>
 							<!--<td id='fifthGrossIncome'></td>-->
-							<td id='fifthNetTax' class='no-tax-data'></td>
-							<td id='fifthNetIncome'class='no-income-data'></td>
+							<td id='fifthNetTax' class='no-tax-data net-tax'></td>
+							<td id='fifthNetIncome'class='no-income-data net-income'></td>
 						</tr>
 						<tr>
 							<td id="sixth-income-limit" class='table-range income-limit'></td>
 							<td class='tax-rate'></td>
 							<!--<td id='sixthGrossIncome'></td>-->
-							<td id='sixthNetTax' class='no-tax-data'></td>
-							<td id='sixthNetIncome'class='no-income-data'></td>
+							<td id='sixthNetTax' class='no-tax-data net-tax'></td>
+							<td id='sixthNetIncome'class='no-income-data net-income'></td>
 						</tr>
 					</tbody>
 				</table>
 				<div class=total-container>
 					<div>
-						<p>Net Income:</p>
-						<p id='total-income'></p>
-					</div>
-					<div>
 						<p>Net Taxes:</p>
 						<p id='total-tax'></p>
+					</div>
+					<div>
+						<p>Net Income:</p>
+						<p id='total-income'></p>
 					</div>
 				</div>
 			</div>
 			<div class='flex-item currency-box'>
-				<h1 class='table-title'>Currency Exchange<sup>*</sup></h1>
+				<h2 class='table-title'>Currency Exchange<sup>*</sup></h2>
 				<img src=''
 					alt =''
 					id='currency-flag'
