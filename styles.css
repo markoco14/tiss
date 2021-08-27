@@ -138,14 +138,14 @@ a:hover {
 	border-radius: 0px 3px 0px 0px;
 }
 
-.salary-on {
+.salary-off {
 	background-color:white;
 	color:rgba(15,15,15,,0.85);
 	height:50px;
 	width:50%;
 	line-height:50px;
 }
-.salary-off {
+.salary-on {
 	background-color:rgba(15,15,15,0.85);
 	color:white;
 	height:50px;

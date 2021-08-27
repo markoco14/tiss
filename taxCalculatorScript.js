@@ -1,62 +1,116 @@
 const taxBracketInfo = [
 	{
-		"grossIncomeMinimum": 0,
-		"grossIncomeLimit": 540000,
+		"annualGrossIncomeMinimum": 0,
+		"annualGrossIncomeLimit": 540000,
 		"netTaxLimit": 27000,
 		"netIncomeLimit": 513000,
+		"monthlyGrossIncomeMinimum": 0,
+		"monthlyGrossIncomeLimit": 45000,
 		"taxRate": 0.05
 	},
 	{
-		"grossIncomeMinimum": 540001,
-		"grossIncomeLimit": 1210000,
+		"annualGrossIncomeMinimum": 540000, 
+		"annualGrossIncomeLimit": 1210000,
 		"netTaxLimit": 80400,
 		"netIncomeLimit": 589600,
+		"monthlyGrossIncomeMinimum": 45000, 
+		"monthlyGrossIncomeLimit": 100833,
 		"taxRate": 0.12
 	},
 	{
-		"grossIncomeMinimum": 1210001,
-		"grossIncomeLimit": 2420000,
+		"annualGrossIncomeMinimum": 1210000,
+		"annualGrossIncomeLimit": 2420000,
 		"netTaxLimit": 242000,
 		"netIncomeLimit": 968000,
+		"monthlyGrossIncomeMinimum": 100833,
+		"monthlyGrossIncomeLimit": 201666,
 		"taxRate": 0.2
 	},
 	{
-		"grossIncomeMinimum": 2420001,
-		"grossIncomeLimit": 4530000,
+		"annualGrossIncomeMinimum": 2420000,
+		"annualGrossIncomeLimit": 4530000,
 		"netTaxLimit": 633000,
 		"netIncomeLimit": 1477000,
+		"monthlyGrossIncomeMinimum": 201666,
+		"monthlyGrossIncomeLimit": 377500,
 		"taxRate": 0.3
 	},
 	{
-		"grossIncomeMinimum": 4530001,
-		"grossIncomeLimit": 10310000,
+		"annualGrossIncomeMinimum": 4530000,
+		"annualGrossIncomeLimit": 10310000,
 		"netTaxLimit": 2312000,
 		"netIncomeLimit": 3468000,
+		"monthlyGrossIncomeMinimum": 377500,
+		"monthlyGrossIncomeLimit": 859166,
 		"taxRate": 0.4
 	},
 	{
-		"grossIncomeMinimum": 10310001,
+		"annualGrossIncomeMinimum": 10310001,
+		"monthlyGrossIncomeMinimum": 859166,
 		"taxRate": 0.45
 	}
 ]
 
 
+// monthly income ranges
+//=45,000
+//=55,833 = 100833
+//=100,833 = 201666
+//=175,834 = 377500
+//=481,666 = 859166
+
+
 const input = document.getElementById('income');
 const submit = document.getElementById('submit');
 
+// create trackers for using monthly or annual salary
+let monthlySalaryIsActive = false;
+const monthlySalary = document.getElementById('salary-monthly');
+const annualSalary = document.getElementById('salary-annual');
 
+// create functions to toggle between monthly and annual salaries
+let setSalaryToMonthly = function() {
+	monthlySalaryIsActive = true;
+	console.log(`Monthly salary is active: ${monthlySalaryIsActive}`)
+	for (i = 0; i < tableIncomeLimitColumn.length; i++) {
+		if (taxBracketInfo[i].monthlyGrossIncomeLimit) {
+			tableIncomeLimitColumn[i].textContent = `up to $${taxBracketInfo[i].monthlyGrossIncomeLimit.toLocaleString('en-us')}`
+		} else {
+			tableIncomeLimitColumn[i].textContent = `$${taxBracketInfo[5].monthlyGrossIncomeMinimum.toLocaleString('en-us')}+`
+		}
+	}
+}
 
-// make references to each row in the first column (income limit column)
+let setSalaryToAnnual = function() {
+	monthlySalaryIsActive = false;
+	console.log(`Monthly salary is active: ${monthlySalaryIsActive}`)
+	for (i = 0; i < tableIncomeLimitColumn.length; i++) {
+		if (taxBracketInfo[i].annualGrossIncomeLimit) {
+			tableIncomeLimitColumn[i].textContent = `up to $${taxBracketInfo[i].annualGrossIncomeLimit.toLocaleString('en-us')}`
+		} else {
+			tableIncomeLimitColumn[i].textContent = `$${taxBracketInfo[5].annualGrossIncomeMinimum.toLocaleString('en-us')}+`
+		}
+	}
+}
+
+monthlySalary.addEventListener('click', setSalaryToMonthly);
+annualSalary.addEventListener('click', setSalaryToAnnual);
+
+// create monthly or annual income range array
+const annualIncomeRangeArray = taxBracketInfo.map((element, i) => {
+	if (!(i === 5)) {
+		return taxBracketInfo[i].annualGrossIncomeLimit - taxBracketInfo[i].annualGrossIncomeMinimum;
+	}
+});
+
+const monthlyIncomeRangeArray = taxBracketInfo.map((element, i) => {
+	if (!(i === 5)) {
+		return taxBracketInfo[i].monthlyGrossIncomeLimit - taxBracketInfo[i].monthlyGrossIncomeMinimum;
+	}
+});
 
 // make reference to income limit column and fill content
 const tableIncomeLimitColumn = document.querySelectorAll('.income-limit');
-for (i = 0; i < tableIncomeLimitColumn.length; i++) {
-	if (taxBracketInfo[i].grossIncomeLimit) {
-		tableIncomeLimitColumn[i].textContent = `up to $${taxBracketInfo[i].grossIncomeLimit.toLocaleString('en-us')}`
-	} else {
-		tableIncomeLimitColumn[i].textContent = `$${taxBracketInfo[5].grossIncomeMinimum.toLocaleString('en-us')}+`
-	}
-}
 
 // make reference to tax rate column and fill content
 const tableTaxRateColumn = document.querySelectorAll('.tax-rate');
@@ -70,551 +124,93 @@ const tableNetTaxColumn = document.querySelectorAll('.net-tax');
 // make reference to the net income column
 const tableNetIncomeColumn = document.querySelectorAll('.net-income');
 
-//TAX VARIABLES HERE
-//create references to the table tax cells
-const firstTableTax = document.getElementById('firstNetTax');
-const secondTableTax = document.getElementById('secondNetTax');
-const thirdTableTax = document.getElementById('thirdNetTax');
-const fourthTableTax = document.getElementById('fourthNetTax');
-const fifthTableTax = document.getElementById('fifthNetTax');
-const sixthTableTax = document.getElementById('sixthNetTax');
-
-//make array for table tax cells
-let tableTaxArray = [
-	firstTableTax, 
-	secondTableTax, 
-	thirdTableTax, 
-	fourthTableTax, 
-	fifthTableTax, 
-	sixthTableTax
-	]
-
-//create references to the table net income cells
-const firstTableNet = document.getElementById('firstNetIncome');
-const secondTableNet = document.getElementById('secondNetIncome');
-const thirdTableNet = document.getElementById('thirdNetIncome');
-const fourthTableNet = document.getElementById('fourthNetIncome');
-const fifthTableNet = document.getElementById('fifthNetIncome');
-const sixthTableNet = document.getElementById('sixthNetIncome');
-
-//make array for table income cells
-let tableIncomeArray = [
-	firstTableNet,
-	secondTableNet,
-	thirdTableNet,
-	fourthTableNet,
-	fifthTableNet,
-	sixthTableNet,
-]
-
-
 
 // .map() taxBracketInfo to make tax rate array
 const taxRatesArray = taxBracketInfo.map((element, i) => {
 	return taxBracketInfo[i].taxRate;
 });
 
-/*
-	need to rename this as grossIncomeRangeArray later
-*/
-const incomeRangeArray = taxBracketInfo.map((element, i) => {
-	if (!(i === 5)) {
-		return taxBracketInfo[i].grossIncomeLimit - taxBracketInfo[i].grossIncomeMinimum;
-	}
-});
-
-// net incomes are rounded down
-const netIncomeArray = taxBracketInfo.map((element, i) => {
-	if (!(i === 5)) {
-		return Math.floor(
-			(
-				(taxBracketInfo[i].grossIncomeLimit - taxBracketInfo[i].grossIncomeMinimum) 
-				* (1 - taxBracketInfo[i].taxRate)
-			)
-		);	
-	}
-});
-
-// net taxes are rounded up
-const netTaxArray = taxBracketInfo.map((element, i) => {
-	if (!(i === 5)) {
-		return Math.ceil(
-			(
-				(taxBracketInfo[i].grossIncomeLimit - taxBracketInfo[i].grossIncomeMinimum) 
-				* (taxBracketInfo[i].taxRate)
-			)
-		);	
-	}
-});
-
-//make tax rate variables
-let firstTaxRate = 0.05; //5% first tax bracket
-let secondTaxRate = 0.12; //12% second tax bracket
-let thirdTaxRate = 0.2; //20% third tax bracket
-let fourthTaxRate = 0.3; //30% fourth tax bracket
-let fifthTaxRate = 0.4; //40% fifth tax bracket
-let sixthTaxRate = 0.45; //45% sixth tax bracket
-
-//make max bracket amount variables
-let firstIncomeRange = 540000;
-let secondIncomeRange = 1210000 - firstIncomeRange;
-let thirdIncomeRange = 2420000 - secondIncomeRange - firstIncomeRange;
-let fourthIncomeRange = 4530000 - thirdIncomeRange - secondIncomeRange - firstIncomeRange;
-let fifthIncomeRange = 10310000 - fourthIncomeRange - thirdIncomeRange - secondIncomeRange - firstIncomeRange;
-//6th bracket open ended. to infinity and beyond. no max.
-//make an array for the income range values
-
-//make $max tax variables for each bracket
-let firstTaxRange = firstIncomeRange * firstTaxRate;
-let secondTaxRange = secondIncomeRange * secondTaxRate;
-let thirdTaxRange = thirdIncomeRange * thirdTaxRate;
-let fourthTaxRange = fourthIncomeRange * fourthTaxRate;
-let fifthTaxRange = fifthIncomeRange * fifthTaxRate;
-
-//6th bracket open ended. to infinity and beyond. no max.
-//make an array for the max tax variables
-let maxTaxArray = [
-	firstTaxRange,
-	secondTaxRange,
-	thirdTaxRange,
-	fourthTaxRange,
-	fifthTaxRange,
-]
-
-// create variables to use in functions
-// let grossIncome;
-// let netIncome;
-// let netTax;
-
 //intitalize totalTax and totalIncome variables
 const totalTax = document.getElementById('total-tax')
 const totalIncome = document.getElementById('total-income')
 
-// write function for income <= 540000
-let firstBracket = function() {
-	//no change necessary for the monthly/annual salary difference
-	//because I'm not using any max ranges. I'm only using the tax rate.
-	//get your gross income
-	grossIncome = input.value;
-	//find the taxes
-	netTax = grossIncome * taxRatesArray[0];
-	//find net income
-	netIncome = grossIncome - netTax;
-	//set table data content
-	tableNetTaxColumn[0].textContent = `$${netTax.toLocaleString('en-US')}`;
-	tableNetIncomeColumn[0].textContent = `$${netIncome.toLocaleString('en-US')}`;
-	/*firstGrossIncome.textContent = `$${grossIncome}`;*/
-	//set the net income and taxes content
-	totalTax.textContent = `${netTax}`;
-	totalIncome.textContent = `${netIncome}`;
-	totalTax.className = 'tax-data'
-	totalIncome.className = 'income-data'
-}
+// I think I can feed the calculateNetTaxAndNetIncome function
+// two more variables because I use the income range array (global)
 
-// write function for 540000 < income <= 1210000
-let secondBracket = function() {
-	let arrayLength = 2;
-	let grossIncome = input.value;
-	let netIncome = 0;
-	let netTax = 0;
-	let grossIncomeTracker = 0;
-	const grossIncomeArray = Array(arrayLength).fill(null);
+let calculateNetTaxAndNetIncome = function(length, incomeRangeArray) {
+	if (length === 1) {
+		grossIncome = input.value;
+		//find the taxes
+		netTax = grossIncome * taxRatesArray[0];
+		//find net income
+		netIncome = grossIncome - netTax;
+		//set table data content
+		tableNetTaxColumn[0].textContent = `$${netTax.toLocaleString('en-US')}`;
+		tableNetIncomeColumn[0].textContent = `$${netIncome.toLocaleString('en-US')}`;
+		/*firstGrossIncome.textContent = `$${grossIncome}`;*/
+		//set the net income and taxes content
+		totalTax.textContent = `${netTax}`;
+		totalIncome.textContent = `${netIncome}`;
+		totalTax.className = 'tax-data'
+		totalIncome.className = 'income-data'
+	} 
 
-	console.log(grossIncomeArray);
+	else {
+		let arrayLength = length;
+		let grossIncome = input.value;
+		// console.log(grossIncome)
+		let netIncome = 0;
+		let netTax = 0;
+		let grossIncomeTracker = 0;
+		const grossIncomeArray = Array(arrayLength).fill(null);
 
-	// calculate gross income
-	for (i = 0; i < grossIncomeArray.length-1; i++) {
-		grossIncomeArray[i] = incomeRangeArray[i];
-	}
-	console.log(grossIncomeArray);
+		// console.log(grossIncomeArray);
 
-	for (i = 0; i < grossIncomeArray.length-1; i++) {
-		grossIncomeTracker += incomeRangeArray[i];
-		console.log(grossIncomeTracker)
-	}
-
-	grossIncomeArray[grossIncomeArray.length-1] = grossIncome - grossIncomeTracker;
-	console.log(grossIncomeArray);
-
-	// calculate net income
-	const netIncomeArray = Array(arrayLength).fill(null);
-	for (i = 0; i < netIncomeArray.length; i++) {
-		netIncomeArray[i] = grossIncomeArray[i] * (1 - taxRatesArray[i]);
-		tableNetIncomeColumn[i].textContent = '$' + netIncomeArray[i].toLocaleString('en-US');
-	}
-	console.log(netIncomeArray)
-
-	// calculate net taxes
-	const netTaxArray = Array(arrayLength).fill(null);
-	for (i = 0; i < netTaxArray.length; i++) {
-		netTaxArray[i] = grossIncomeArray[i] * taxRatesArray[i];
-		tableNetTaxColumn[i].textContent = '$' + netTaxArray[i].toLocaleString('en-US');
-	}
-	console.log(netTaxArray)
-	
-	// calculate total net income
-	for (i = 0; i < netIncomeArray.length; i++) {
-		netIncome += netIncomeArray[i]
-	}
-
-	// calculate total net taxes
-	for (i = 0; i < netTaxArray.length; i++) {
-		netTax += netTaxArray[i]
-	}
-	//set table data content
-	//use a conditional here to correct for monthly or annual salary
-	// if (monthlySalary.className === 'salary-on') {
-	// 	for (i = 0; i < 1; i++) {
-	// 		tableTaxArray[i].textContent = `$${(maxTaxArray[i]).toLocaleString('en-US')}`;
-	// 		tableIncomeArray[i].textContent = `$${(incomeRangeArray[i]-maxTaxArray[i]).toLocaleString('en-US')}`;
-	// 		// grossTableArray[i].textContent = `$${incomeRangeArray[i]}`;
-	// 	}
-	// } else {
-	// 	for (i = 0; i < 1; i++) {
-	// 		tableTaxArray[i].textContent = `$${maxTaxArray[i].toLocaleString('en-US')}`;
-	// 		tableIncomeArray[i].textContent = `$${(incomeRangeArray[i]-maxTaxArray[i]).toLocaleString('en-US')}`;
-	// 		// grossTableArray[i].textContent = `$${incomeRangeArray[i]}`;
-	// 	}
-	// }
-
-	
-	totalTax.textContent = `${netTax}`;
-	totalIncome.textContent = `${netIncome}`;
-	totalTax.className = 'tax-data'
-	totalIncome.className = 'income-data'
-}
-
-let thirdBracket = function() {
-	// grossIncome = input.value;
-	// //find the gross income for third bracket
-	// let grossIncomeOne = incomeRangeArray[0];
-	// let grossIncomeTwo = incomeRangeArray[1];
-	// let grossIncomeThree = grossIncome - incomeRangeArray[1] - incomeRangeArray[0];
-	// console.log(grossIncomeThree);
-	// //find the total taxes for third bracket
-	// let firstIncomeTax = firstTaxRange;
-	// let secondIncomeTax = secondTaxRange;
-	// let thirdIncomeTax = grossIncomeThree * taxRatesArray[2];
-	// //find net income for third bracket
-	// let firstNetIncome = grossIncomeOne - firstIncomeTax;
-	// let secondNetIncome = grossIncomeTwo - secondIncomeTax;
-	// let netIncomeThree = grossIncomeThree - thirdIncomeTax;
-	// //find total net income
-	// netIncome = netIncomeThree + firstNetIncome + secondNetIncome;
-	// netTax = firstIncomeTax + secondIncomeTax + thirdIncomeTax;
-
-	let arrayLength = 3;
-	let grossIncome = input.value;
-	let netIncome = 0;
-	let netTax = 0;
-	let grossIncomeTracker = 0;
-	const grossIncomeArray = Array(arrayLength).fill(null);
-
-	console.log(grossIncomeArray);
-
-	// calculate gross income
-	for (i = 0; i < grossIncomeArray.length-1; i++) {
-		grossIncomeArray[i] = incomeRangeArray[i];
-	}
-	console.log(grossIncomeArray);
-
-	for (i = 0; i < grossIncomeArray.length-1; i++) {
-		grossIncomeTracker += incomeRangeArray[i];
-		console.log(grossIncomeTracker)
-	}
-
-	grossIncomeArray[grossIncomeArray.length-1] = grossIncome - grossIncomeTracker;
-	console.log(grossIncomeArray);
-
-	// calculate net income
-	const netIncomeArray = Array(arrayLength).fill(null);
-	for (i = 0; i < netIncomeArray.length; i++) {
-		netIncomeArray[i] = grossIncomeArray[i] * (1 - taxRatesArray[i]);
-		tableNetIncomeColumn[i].textContent = '$' + netIncomeArray[i].toLocaleString('en-US');
-	}
-	console.log(netIncomeArray)
-
-	// calculate net taxes
-	const netTaxArray = Array(arrayLength).fill(null);
-	for (i = 0; i < netTaxArray.length; i++) {
-		netTaxArray[i] = grossIncomeArray[i] * taxRatesArray[i];
-		tableNetTaxColumn[i].textContent = '$' + netTaxArray[i].toLocaleString('en-US');
-	}
-	console.log(netTaxArray)
-	
-	// calculate total net income
-	for (i = 0; i < netIncomeArray.length; i++) {
-		netIncome += netIncomeArray[i]
-	}
-
-	// calculate total net taxes
-	for (i = 0; i < netTaxArray.length; i++) {
-		netTax += netTaxArray[i]
-	}
-
-	//set table data content
-	//use a conditional here to correct for monthly or annual salary
-	if (monthlySalary.className === 'salary-on') {
-		for (i = 0; i < 2; i++) {
-			tableTaxArray[i].textContent = `$${(maxTaxArray[i]).toLocaleString('en-US')}`;
-			tableIncomeArray[i].textContent = `$${(incomeRangeArray[i]-maxTaxArray[i]).toLocaleString('en-US')}`;
-			/*grossTableArray[i].textContent = `$${incomeRangeArray[i]}`;*/
+		// calculate gross income
+		for (i = 0; i < grossIncomeArray.length-1; i++) {
+			grossIncomeArray[i] = incomeRangeArray[i];
 		}
-	} else {
-		for (i = 0; i < 2; i++) {
-			tableTaxArray[i].textContent = `$${maxTaxArray[i].toLocaleString('en-US')}`;
-			tableIncomeArray[i].textContent = `$${(incomeRangeArray[i]-maxTaxArray[i]).toLocaleString('en-US')}`;
-			/*grossTableArray[i].textContent = `$${incomeRangeArray[i]}`;*/
+		// console.log(grossIncomeArray);
+
+		for (i = 0; i < grossIncomeArray.length-1; i++) {
+			grossIncomeTracker += incomeRangeArray[i];
+			// console.log(grossIncomeTracker)
 		}
-	}
 
-	totalTax.textContent = `${netTax}`;
-	totalIncome.textContent = `${netIncome}`;
-	totalTax.className = 'tax-data'
-	totalIncome.className = 'income-data'
+		grossIncomeArray[grossIncomeArray.length-1] = grossIncome - grossIncomeTracker;
+		// console.log(grossIncomeArray);
 
-
-}
-
-let fourthBracket = function() {
-	let arrayLength = 4;
-	let grossIncome = input.value;
-	let netIncome = 0;
-	let netTax = 0;
-	let grossIncomeTracker = 0;
-	const grossIncomeArray = Array(arrayLength).fill(null);
-
-	console.log(grossIncomeArray);
-
-	// calculate gross income
-	for (i = 0; i < grossIncomeArray.length-1; i++) {
-		grossIncomeArray[i] = incomeRangeArray[i];
-	}
-	console.log(grossIncomeArray);
-
-	for (i = 0; i < grossIncomeArray.length-1; i++) {
-		grossIncomeTracker += incomeRangeArray[i];
-		console.log(grossIncomeTracker)
-	}
-
-	grossIncomeArray[grossIncomeArray.length-1] = grossIncome - grossIncomeTracker;
-	console.log(grossIncomeArray);
-
-	// calculate net income
-	const netIncomeArray = Array(arrayLength).fill(null);
-	for (i = 0; i < netIncomeArray.length; i++) {
-		netIncomeArray[i] = grossIncomeArray[i] * (1 - taxRatesArray[i]);
-		tableNetIncomeColumn[i].textContent = '$' + netIncomeArray[i].toLocaleString('en-US');
-	}
-	console.log(netIncomeArray)
-
-	// calculate net taxes
-	const netTaxArray = Array(arrayLength).fill(null);
-	for (i = 0; i < netTaxArray.length; i++) {
-		netTaxArray[i] = grossIncomeArray[i] * taxRatesArray[i];
-		tableNetTaxColumn[i].textContent = '$' + netTaxArray[i].toLocaleString('en-US');
-	}
-	console.log(netTaxArray)
-	
-	// calculate total net income
-	for (i = 0; i < netIncomeArray.length; i++) {
-		netIncome += netIncomeArray[i]
-	}
-
-	// calculate total net taxes
-	for (i = 0; i < netTaxArray.length; i++) {
-		netTax += netTaxArray[i]
-	}
-
-	//set table data content
-	//use a conditional here to correct for monthly or annual salary
-	// if (monthlySalary.className === 'salary-on') {
-	// 	for (i = 0; i < 3; i++) {
-	// 		tableTaxArray[i].textContent = `$${(maxTaxArray[i]).toLocaleString('en-US')}`;
-	// 		tableIncomeArray[i].textContent = `$${((incomeRangeArray[i]-maxTaxArray[i])).toLocaleString('en-US')}`;
-	// 		// grossTableArray[i].textContent = `$${incomeRangeArray[i]}`;
-	// 	}
-	// } else {
-	// 	for (i = 0; i < 3; i++) {
-	// 		tableTaxArray[i].textContent = `$${maxTaxArray[i].toLocaleString('en-US')}`;
-	// 		tableIncomeArray[i].textContent = `$${(incomeRangeArray[i]-maxTaxArray[i]).toLocaleString('en-US')}`;
-	// 		// grossTableArray[i].textContent = `$${incomeRangeArray[i]}`;
-	// 	}
-	// }
-
-	totalTax.textContent = `${netTax}`;
-	totalIncome.textContent = `${netIncome}`;
-	totalTax.className = 'tax-data'
-	totalIncome.className = 'income-data'
-
-}
-
-//function for the fifth tax bracket
-let fifthBracket = function() {
-	// grossIncome = input.value;
-	// //gross income for each bracket
-	// let grossIncomeOne = firstIncomeRange;
-	// let grossIncomeTwo = secondIncomeRange;
-	// let grossIncomeThree = thirdIncomeRange;
-	// let grossIncomeFour = fourthIncomeRange;
-	// let grossIncomeFive = grossIncome - fourthIncomeRange - thirdIncomeRange - secondIncomeRange - firstIncomeRange;
-
-	// //tax amounts for each bracket
-	// let firstIncomeTax = firstTaxRange;
-	// let secondIncomeTax = secondTaxRange;
-	// let thirdIncomeTax = thirdTaxRange;
-	// let fourthIncomeTax = fourthTaxRange;
-	// let fifthIncomeTax = grossIncomeFive * taxRatesArray[4];
-
-	// //net income for each bracket
-	// let firstNetIncome = grossIncomeOne - firstIncomeTax;
-	// let secondNetIncome = grossIncomeTwo - secondIncomeTax;
-	// let thirdNetIncome = grossIncomeThree - thirdIncomeTax;
-	// let fourthNetIncome = grossIncomeFour - fourthIncomeTax;
-	// let fifthNetIncome = grossIncomeFive - fifthIncomeTax;
-
-	// //total net income
-	// netIncome = firstNetIncome + secondNetIncome + thirdNetIncome + fourthNetIncome + fifthNetIncome;
-	// netTax = firstIncomeTax + secondIncomeTax + thirdIncomeTax + fourthIncomeTax + fifthIncomeTax;
-
-	let arrayLength = 5;
-	let grossIncome = input.value;
-	let netIncome = 0;
-	let netTax = 0;
-	let grossIncomeTracker = 0;
-	const grossIncomeArray = Array(arrayLength).fill(null);
-
-	console.log(grossIncomeArray);
-
-	// calculate gross income
-	for (i = 0; i < grossIncomeArray.length-1; i++) {
-		grossIncomeArray[i] = incomeRangeArray[i];
-	}
-	console.log(grossIncomeArray);
-
-	for (i = 0; i < grossIncomeArray.length-1; i++) {
-		grossIncomeTracker += incomeRangeArray[i];
-		console.log(grossIncomeTracker)
-	}
-
-	grossIncomeArray[grossIncomeArray.length-1] = grossIncome - grossIncomeTracker;
-	console.log(grossIncomeArray);
-
-	// calculate net income
-	const netIncomeArray = Array(arrayLength).fill(null);
-	for (i = 0; i < netIncomeArray.length; i++) {
-		netIncomeArray[i] = grossIncomeArray[i] * (1 - taxRatesArray[i]);
-		tableNetIncomeColumn[i].textContent = '$' + netIncomeArray[i].toLocaleString('en-US');
-	}
-	console.log(netIncomeArray)
-
-	// calculate net taxes
-	const netTaxArray = Array(arrayLength).fill(null);
-	for (i = 0; i < netTaxArray.length; i++) {
-		netTaxArray[i] = grossIncomeArray[i] * taxRatesArray[i];
-		tableNetTaxColumn[i].textContent = '$' + netTaxArray[i].toLocaleString('en-US');
-	}
-	console.log(netTaxArray)
-	
-	// calculate total net income
-	for (i = 0; i < netIncomeArray.length; i++) {
-		netIncome += netIncomeArray[i]
-	}
-
-	// calculate total net taxes
-	for (i = 0; i < netTaxArray.length; i++) {
-		netTax += netTaxArray[i]
-	}
-
-
-	//set table data content
-	//use a conditional here to correct for monthly or annual salary
-	if (monthlySalary.className === 'salary-on') {
-		for (i = 0; i < 4; i++) {
-			tableTaxArray[i].textContent = `$${(maxTaxArray[i]).toLocaleString('en-US')}`;
-			tableIncomeArray[i].textContent = `$${((incomeRangeArray[i]-maxTaxArray[i])).toLocaleString('en-US')}`;
-			/*grossTableArray[i].textContent = `$${incomeRangeArray[i]}`;*/
+		// calculate net income
+		const netIncomeArray = Array(arrayLength).fill(null);
+		for (i = 0; i < netIncomeArray.length; i++) {
+			netIncomeArray[i] = grossIncomeArray[i] * (1 - taxRatesArray[i]);
+			tableNetIncomeColumn[i].textContent = '$' + netIncomeArray[i].toLocaleString('en-US');
 		}
-	} else {
-		for (i = 0; i < 4; i++) {
-			tableTaxArray[i].textContent = `$${maxTaxArray[i].toLocaleString('en-US')}`;
-			tableIncomeArray[i].textContent = `$${(incomeRangeArray[i]-maxTaxArray[i]).toLocaleString('en-US')}`;
-			/*grossTableArray[i].textContent = `$${incomeRangeArray[i]}`;*/
+		// console.log(netIncomeArray)
+
+		// calculate net taxes
+		const netTaxArray = Array(arrayLength).fill(null);
+		for (i = 0; i < netTaxArray.length; i++) {
+			netTaxArray[i] = grossIncomeArray[i] * taxRatesArray[i];
+			tableNetTaxColumn[i].textContent = '$' + netTaxArray[i].toLocaleString('en-US');
 		}
+		// console.log(netTaxArray)
+		
+		// calculate total net income
+		for (i = 0; i < netIncomeArray.length; i++) {
+			netIncome += netIncomeArray[i]
+		}
+
+		// calculate total net taxes
+		for (i = 0; i < netTaxArray.length; i++) {
+			netTax += netTaxArray[i]
+		}
+
+		totalTax.textContent = `${netTax}`;
+		totalIncome.textContent = `${netIncome}`;
+		totalTax.className = 'tax-data'
+		totalIncome.className = 'income-data'	
 	}
-
-
-
-	totalTax.textContent = `${netTax}`;
-	totalIncome.textContent = `${netIncome}`;
-	totalTax.className = 'tax-data'
-	totalIncome.className = 'income-data'
-
-}
-
-let sixthBracket = function() {
-	grossIncome = input.value;
-
-	//income at each bracket
-	let grossIncomeOne = firstIncomeRange;
-	let grossIncomeTwo = secondIncomeRange;
-	let grossIncomeThree = thirdIncomeRange;
-	let grossIncomeFour = fourthIncomeRange;
-	let grossIncomeFive = fifthIncomeRange;
-	let grossIncomeSix = grossIncome - fifthIncomeRange - fourthIncomeRange - thirdIncomeRange - secondIncomeRange - firstIncomeRange;
-	
-
-	//tax at each bracket
-	let firstIncomeTax = firstTaxRange;
-	let secondIncomeTax = secondTaxRange;
-	let thirdIncomeTax = thirdTaxRange;
-	let fourthIncomeTax = fourthTaxRange;
-	let fifthIncomeTax = fifthTaxRange;
-	let sixthIncomeTax = grossIncomeSix * taxRatesArray[5];
-
-	//net income at each bracket
-	let netIncomeOne = grossIncomeOne - firstIncomeTax;
-	let netIncomeTwo = grossIncomeTwo - secondIncomeTax;
-	let netIncomeThree = grossIncomeThree - thirdIncomeTax;
-	let netIncomeFour = grossIncomeFour - fourthIncomeTax;
-	let netIncomeFive = grossIncomeFive - fifthIncomeTax;
-	let netIncomeSix = grossIncomeSix - sixthIncomeTax;
-
-	//total net income
-	netIncome = netIncomeOne + netIncomeTwo + netIncomeThree + netIncomeFour + netIncomeFive + netIncomeSix;
-	netTax = firstIncomeTax + secondIncomeTax + thirdIncomeTax + fourthIncomeTax + fifthIncomeTax + sixthIncomeTax;
-
-	// set the table data content
-	// I want to shortner the second line... 
-	//but I would need variables and arrays for the calculations
-	//try to add the locale string method into the for loop
-	//since it works I can copy and paste the code into the other for loops
-	//set table data content
-	//use a conditional here to correct for monthly or annual salary
-	if (monthlySalary.className === 'salary-on') {
-		for (i = 0; i < 5; i++) {
-			tableTaxArray[i].textContent = `$${(maxTaxArray[i]).toLocaleString('en-US')}`;
-			tableIncomeArray[i].textContent = `$${((incomeRangeArray[i]-maxTaxArray[i])).toLocaleString('en-US')}`;
-			/*grossTableArray[i].textContent = `$${incomeRangeArray[i]}`;*/
-		}
-	} else {
-		for (i = 0; i < 5; i++) {
-			tableTaxArray[i].textContent = `$${maxTaxArray[i].toLocaleString('en-US')}`;
-			tableIncomeArray[i].textContent = `$${(incomeRangeArray[i]-maxTaxArray[i]).toLocaleString('en-US')}`;
-			/*grossTableArray[i].textContent = `$${incomeRangeArray[i]}`;*/
-		}
-	}
-	
-	sixthTableTax.textContent = `$${sixthIncomeTax.toLocaleString('en-US')}`;
-	sixthTableNet.textContent = `$${netIncomeSix.toLocaleString('en-US')}`;
-	/*sixthGrossIncome.textContent = `$${grossIncomeSix}`;*/
-
-	totalTax.textContent = `${netTax}`;
-	totalIncome.textContent = `${netIncome}`;
-	totalTax.className = 'tax-data'
-	totalIncome.className = 'income-data'
-
-
 }
 
 let formatInputValue = function() {
@@ -641,13 +237,20 @@ let formatInputValue = function() {
 	// input.value = `$${inputNumber.toLocaleString('en-us')}`;
 }
 
-input.addEventListener('keyup', formatInputValue);
-
 let userInput;
 //function to call tax functions on click
+
+
 let chooseFunction = function(whichFunctions) {
 	if (input.value === '') {
-		alert('You need to enter a number to use the tax calculator.')
+		// alert('You need to enter a number to use the tax calculator.')
+		for (i = 0; i < tableNetTaxColumn.length; i++) {
+			tableNetTaxColumn[i].textContent = '';
+		}
+		//reset the table net income data
+		for (i = 0; i < tableNetIncomeColumn.length; i++) {
+			tableNetIncomeColumn[i].textContent = '';
+		}
 		input.focus();
 		return
 	} 
@@ -664,12 +267,14 @@ let chooseFunction = function(whichFunctions) {
 	//but before I do I want to find out if
 	//I should make an object with properties for each of these. 
 	//reset the table tax data
-	for (i = 0; i < tableTaxArray.length; i++) {
-		tableTaxArray[i].textContent = '';
+	for (i = 0; i < tableNetTaxColumn.length; i++) {
+		tableNetTaxColumn[i].textContent = '';
+		tableNetTaxColumn[i].className = 'no-tax-data';
 	}
 	//reset the table net income data
-	for (i = 0; i < tableIncomeArray.length; i++) {
-		tableIncomeArray[i].textContent = '';
+	for (i = 0; i < tableNetIncomeColumn.length; i++) {
+		tableNetIncomeColumn[i].textContent = '';
+		tableNetTaxColumn[i].className = 'no-income-date';
 	}
 	//reset the table gross income data
 	/*for (i = 0; i < grossTableArray.length; i++) {
@@ -704,33 +309,51 @@ let chooseFunction = function(whichFunctions) {
 	//One way I could do it:
 	//check right away for the monthly class name, and change all my bracket values
 	//then let the function carry out as normal
-	if (monthlySalary.className === 'salary-on') {
+	if (monthlySalaryIsActive) {
 		if (grossIncome < 45001) {
-			firstBracket();
+			let length = 1;
+			calculateNetTaxAndNetIncome(length, monthlyIncomeRangeArray);
 		} else if (grossIncome >= 45001 && grossIncome < 100834) {
-			secondBracket();
+			let length = 2;
+			calculateNetTaxAndNetIncome(length, monthlyIncomeRangeArray);
 		} else if (grossIncome >= 100834 && grossIncome < 201667) {
-			thirdBracket();
+			let length = 3;
+			calculateNetTaxAndNetIncome(length, monthlyIncomeRangeArray);
 		} else if (grossIncome >= 201667 && grossIncome < 377501) {
-			fourthBracket();
+			let length = 4;
+			calculateNetTaxAndNetIncome(length, monthlyIncomeRangeArray);
 		} else if (grossIncome >= 377501 && grossIncome < 859167) {
-			fifthBracket();
+			let length = 5;
+			calculateNetTaxAndNetIncome(length, monthlyIncomeRangeArray);
 		} else if (grossIncome >= 859167) {
-			sixthBracket();
+			let length = 6;
+			calculateNetTaxAndNetIncome(length, monthlyIncomeRangeArray);
 		}
 	} else {
 		if (grossIncome < 540001) {
-			firstBracket();
+			// firstBracket();
+			let length = 1;
+			calculateNetTaxAndNetIncome(length, annualIncomeRangeArray);
 		} else if (grossIncome >= 540001  && grossIncome < 1210001) {
-			secondBracket();
+			// secondBracket();
+			let length = 2;
+			calculateNetTaxAndNetIncome(length, annualIncomeRangeArray);
 		} else if (grossIncome >= 1210001 && grossIncome < 2420001) {
-			thirdBracket();
+			// thirdBracket();
+			let length = 3;
+			calculateNetTaxAndNetIncome(length, annualIncomeRangeArray);
 		} else if (grossIncome >= 2420001 && grossIncome < 4530001){
-			fourthBracket();
+			// fourthBracket();
+			let length = 4;
+			calculateNetTaxAndNetIncome(length, annualIncomeRangeArray);
 		} else if (grossIncome >= 4530001 && grossIncome < 10310001) {
-			fifthBracket();
+			// fifthBracket();
+			let length = 5;
+			calculateNetTaxAndNetIncome(length, annualIncomeRangeArray);
 		} else if (grossIncome >= 10310001 ) {
-			sixthBracket();
+			// sixthBracket();
+			let length = 6;
+			calculateNetTaxAndNetIncome(length, annualIncomeRangeArray);
 		} 
 
 	}
@@ -779,22 +402,21 @@ let chooseFunction = function(whichFunctions) {
 	//this would let me hold multiple tax and net income and even range values for each bracket
 	//note that I am using the length of the tax array
 	//to loop through both the tax array and the net income array
-	for (i = 0; i < tableTaxArray.length; i++) {
-		if (tableTaxArray[i].textContent !== '') {
-			tableTaxArray[i].className = 'tax-data'
-			tableIncomeArray[i].className = 'income-data'
+	for (i = 0; i < tableNetTaxColumn.length; i++) {
+		if (tableNetTaxColumn[i].textContent !== '') {
+			tableNetTaxColumn[i].className = 'tax-data'
+			tableNetIncomeColumn[i].className = 'income-data'
 		} else {
-			tableTaxArray[i].className = 'no-tax-data'
-			tableIncomeArray[i].className = 'no-income-data'
+			tableNetTaxColumn[i].className = 'no-tax-data'
+			tableNetIncomeColumn[i].className = 'no-income-data'
 		}
 	}
-
-	
-
-	
-	
 }	
 
-
+input.addEventListener('keyup', chooseFunction);
+input.addEventListener('keyup', formatInputValue);
 submit.addEventListener('click', chooseFunction);
+
+setSalaryToAnnual();
+
 
