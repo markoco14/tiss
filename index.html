@@ -28,13 +28,14 @@
 					alt = 'An image of the Taiwan flag.'
 					class='selected-flag'>
 				<h3>Currency: New Taiwan Dollar </h3>
+				<p>How do you want to calculate your income?</p>
 				<div id='salary-toggle' class='salary-toggle'>
 					<div id='salary-monthly' class='salary-off'>Monthly Salary</div>
 					<div id='salary-annual' class='salary-on'>Annual Salary</div>
 				</div>
-				<p>Enter your desired annual salary below to find out your taxes and net income. Your number must be without any '$'s and ','s (example: 5000).</p>
+				<p>Please enter a number without any "$" or ",".</p>
 				<div class='inputs-div'>
-					<input type='text' id='income' class='income page-title'>
+					<input type='text' id='income' class='income page-title' placeholder='Enter a salary number'>
 					<button id='submit' class='submit page-title'>
 						Calculate
 					</button>
@@ -112,7 +113,7 @@
 					alt =''
 					id='currency-flag'
 					class='selected-flag'>
-				<h3>Currency: <span id='selected-exchange'>New Taiwan Dollar</span> </h3>
+				<h3>Currency: <span id='selected-exchange'>None selected</span> </h3>
 				<p> Choose your currency below to see how much your salary is worth in your home country. </p>
 
 				<div id='flag-bar' class='flag-container'>
@@ -149,7 +150,7 @@
 				</div>
 
 				<select id='select-currency' class='currency-selector'>
-					<option value=''>--Choose your currency--</option>
+					<option value='Default'>--Choose your currency--</option>
 					<option value='CAD'>Canadian dollars</option>
 					<option value='USD'>US dollars</option>
 					<option value='AUD'>Australian dollars</option>
@@ -178,6 +179,24 @@
 		</div>
 
 		<!-- I don't know if the JS script is better in the body tag or the head tag !-->
+		<script>
+			// Create a request variable and assign a new XMLHttpRequest object to it.
+			var request = new XMLHttpRequest()
+			// Open a new connection, using the GET request on the URL endpoint
+			request.open('GET', 'https://api.exchangerate.host/latest', true)
+			// Make .onload and access function?
+			request.onload = function() {
+				//parse resonse
+				currencyData = JSON.parse(this.response)
+				//test with console log
+				
+				console.log(currencyData.rates)
+				
+			}
+
+			// Send request
+			request.send()
+		</script>
 		<script src='exchangeScripts.js'></script>
 		<script src='taxCalculatorScript.js'></script>
 		<script src='buttonBarScript.js'></script>

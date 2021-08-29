@@ -51,17 +51,12 @@ const taxBracketInfo = [
 	}
 ]
 
-
-// monthly income ranges
-//=45,000
-//=55,833 = 100833
-//=100,833 = 201666
-//=175,834 = 377500
-//=481,666 = 859166
-
-
 const input = document.getElementById('income');
 const submit = document.getElementById('submit');
+
+/*
+	monthly/annual salary logic
+*/
 
 // create trackers for using monthly or annual salary
 let monthlySalaryIsActive = false;
@@ -72,6 +67,12 @@ const annualSalary = document.getElementById('salary-annual');
 let setSalaryToMonthly = function() {
 	monthlySalaryIsActive = true;
 	console.log(`Monthly salary is active: ${monthlySalaryIsActive}`)
+	// set styles for annual salary button
+	annualSalary.classList.remove('salary-on');
+	annualSalary.classList.add('salary-off');
+	// set styles for monthly salary button
+	monthlySalary.classList.remove('salary-off');
+	monthlySalary.classList.add('salary-on');
 	for (i = 0; i < tableIncomeLimitColumn.length; i++) {
 		if (taxBracketInfo[i].monthlyGrossIncomeLimit) {
 			tableIncomeLimitColumn[i].textContent = `up to $${taxBracketInfo[i].monthlyGrossIncomeLimit.toLocaleString('en-us')}`
@@ -79,11 +80,20 @@ let setSalaryToMonthly = function() {
 			tableIncomeLimitColumn[i].textContent = `$${taxBracketInfo[5].monthlyGrossIncomeMinimum.toLocaleString('en-us')}+`
 		}
 	}
+	if (input.value !== '') {
+		determineTaxBracketAndCalculate();
+	}
 }
 
 let setSalaryToAnnual = function() {
 	monthlySalaryIsActive = false;
 	console.log(`Monthly salary is active: ${monthlySalaryIsActive}`)
+	// set styles for annual salary button
+	annualSalary.classList.remove('salary-off');
+	annualSalary.classList.add('salary-on');
+	// set styles for monthly salary button
+	monthlySalary.classList.remove('salary-on');
+	monthlySalary.classList.add('salary-off');
 	for (i = 0; i < tableIncomeLimitColumn.length; i++) {
 		if (taxBracketInfo[i].annualGrossIncomeLimit) {
 			tableIncomeLimitColumn[i].textContent = `up to $${taxBracketInfo[i].annualGrossIncomeLimit.toLocaleString('en-us')}`
@@ -91,10 +101,17 @@ let setSalaryToAnnual = function() {
 			tableIncomeLimitColumn[i].textContent = `$${taxBracketInfo[5].annualGrossIncomeMinimum.toLocaleString('en-us')}+`
 		}
 	}
+	if (input.value !== '') {
+		determineTaxBracketAndCalculate();
+	}
 }
 
 monthlySalary.addEventListener('click', setSalaryToMonthly);
 annualSalary.addEventListener('click', setSalaryToAnnual);
+
+/*
+	Tax calculator logic
+*/
 
 // create monthly or annual income range array
 const annualIncomeRangeArray = taxBracketInfo.map((element, i) => {
@@ -111,7 +128,14 @@ const monthlyIncomeRangeArray = taxBracketInfo.map((element, i) => {
 
 // make reference to income limit column and fill content
 const tableIncomeLimitColumn = document.querySelectorAll('.income-limit');
-
+// set default table income limit column
+for (i = 0; i < tableIncomeLimitColumn.length; i++) {
+		if (taxBracketInfo[i].annualGrossIncomeLimit) {
+			tableIncomeLimitColumn[i].textContent = `up to $${taxBracketInfo[i].annualGrossIncomeLimit.toLocaleString('en-us')}`
+		} else {
+			tableIncomeLimitColumn[i].textContent = `$${taxBracketInfo[5].annualGrossIncomeMinimum.toLocaleString('en-us')}+`
+		}
+	}
 // make reference to tax rate column and fill content
 const tableTaxRateColumn = document.querySelectorAll('.tax-rate');
 for (i = 0; i < tableTaxRateColumn.length; i++) {
@@ -134,6 +158,11 @@ const taxRatesArray = taxBracketInfo.map((element, i) => {
 const totalTax = document.getElementById('total-tax')
 const totalIncome = document.getElementById('total-income')
 
+let grossIncome;
+// console.log(grossIncome)
+let netIncome;
+let netTax;
+
 // I think I can feed the calculateNetTaxAndNetIncome function
 // two more variables because I use the income range array (global)
 
@@ -153,14 +182,21 @@ let calculateNetTaxAndNetIncome = function(length, incomeRangeArray) {
 		totalIncome.textContent = `${netIncome}`;
 		totalTax.className = 'tax-data'
 		totalIncome.className = 'income-data'
+
+		// convert net tax and net income to local strings
+		let taxNumber = Number(totalTax.textContent).toLocaleString('en-US');
+		let incomeNumber = Number(totalIncome.textContent).toLocaleString('en-US');
+		//console.log(`Your net taxes are $${taxNumber}`)
+		totalTax.textContent =  `$${taxNumber}`;
+		totalIncome.textContent =  `$${incomeNumber}`;
 	} 
 
 	else {
 		let arrayLength = length;
-		let grossIncome = input.value;
+		grossIncome = input.value;
 		// console.log(grossIncome)
-		let netIncome = 0;
-		let netTax = 0;
+		netIncome = 0;
+		netTax = 0;
 		let grossIncomeTracker = 0;
 		const grossIncomeArray = Array(arrayLength).fill(null);
 
@@ -201,6 +237,7 @@ let calculateNetTaxAndNetIncome = function(length, incomeRangeArray) {
 			netIncome += netIncomeArray[i]
 		}
 
+
 		// calculate total net taxes
 		for (i = 0; i < netTaxArray.length; i++) {
 			netTax += netTaxArray[i]
@@ -210,97 +247,67 @@ let calculateNetTaxAndNetIncome = function(length, incomeRangeArray) {
 		totalIncome.textContent = `${netIncome}`;
 		totalTax.className = 'tax-data'
 		totalIncome.className = 'income-data'	
+
+		// convert net tax and net income to local strings
+		let taxNumber = Number(totalTax.textContent).toLocaleString('en-US');
+		let incomeNumber = Number(totalIncome.textContent).toLocaleString('en-US');
+		//console.log(`Your net taxes are $${taxNumber}`)
+		totalTax.textContent =  `$${taxNumber}`;
+		totalIncome.textContent =  `$${incomeNumber}`;
 	}
 }
 
-let formatInputValue = function() {
-	let cleanInput;
-	if (input.value.includes('$')) {
-		let index = input.value.indexOf('$');
-		cleanInput = input.value.slice(index+1, input.value.length)
-		// console.log(cleanInput)
-		// console.log(typeof(cleanInput))
+function cleanPreviousInputValue(input) {
+	while(input.value.includes(',') || input.value.includes('$')) {
+	    input.value = input.value.replace(',','');
+	    input.value = input.value.replace('$','');
 	}
-
-	const inputNumber = Number(cleanInput);
-	// console.log(inputNumber)
-
-	const formatInputNumber = inputNumber.toLocaleString('en-us');
-	// console.log(formatInputNumber)
-	// const inputNumber = Number(cleanInput);
-	// console.log(inputNumber)
-
-	// const inputString = cleanInput;
-	// console.log(inputString);
-	// let inputNumber = Number(inputString);
-	// console.log(inputNumber.toLocaleString('en-us'));
-	// input.value = `$${inputNumber.toLocaleString('en-us')}`;
 }
 
-let userInput;
-//function to call tax functions on click
-
-
-let chooseFunction = function(whichFunctions) {
-	if (input.value === '') {
-		// alert('You need to enter a number to use the tax calculator.')
-		for (i = 0; i < tableNetTaxColumn.length; i++) {
-			tableNetTaxColumn[i].textContent = '';
-		}
-		//reset the table net income data
-		for (i = 0; i < tableNetIncomeColumn.length; i++) {
-			tableNetIncomeColumn[i].textContent = '';
-		}
-		input.focus();
-		return
-	} 
-
-	if (!(Number(input.value) >= 0)) {
-		alert('You need to enter a number to use the tax calculator.')
-		input.value = '';
-		input.focus();
-		return
-	}
-
-	//all of these for loops can be put into one 
-	//as long as each is equal in length.
-	//but before I do I want to find out if
-	//I should make an object with properties for each of these. 
-	//reset the table tax data
-	for (i = 0; i < tableNetTaxColumn.length; i++) {
+function clearPreviousTableFormatting() {
+	for (i = 0; i < 6; i++) {
 		tableNetTaxColumn[i].textContent = '';
-		tableNetTaxColumn[i].className = 'no-tax-data';
-	}
-	//reset the table net income data
-	for (i = 0; i < tableNetIncomeColumn.length; i++) {
 		tableNetIncomeColumn[i].textContent = '';
-		tableNetTaxColumn[i].className = 'no-income-date';
 	}
-	//reset the table gross income data
-	/*for (i = 0; i < grossTableArray.length; i++) {
-		grossTableArray[i].textContent = '';
-	}*/
+}
 
-	//reset total tax and income
-	totalTax.textContent = '';
-	totalIncome.textContent = '';
-	totalTax.className = '';
-	totalIncome.className = '';
+function formatCurrentInputAsLocaleString() {
+	const chosenSalaryNumber = Number(input.value);
+	const chosenSalaryLocale = chosenSalaryNumber.toLocaleString('en-us');
+	if (input.value === '') {
+		input.value = '$0';
+	} else {
+		input.value = `$${chosenSalaryLocale}`;
+	}
+}
 
-	//reset the conversion tax and income
-	
-	foreignTax.textContent = '';
-	foreignIncome.textContent = '';
-	foreignTax.className = '';
-	foreignIncome.className = '';
+let determineTaxBracketAndCalculate = function() {
 
-	//the lines below reset the currency converter
-	select.value = '';
-	yourIncome.textContent = '';
-	yourTax.textContent = '';
+	cleanPreviousInputValue(input);
 	
-	userInput = input.value;
-	
+	clearPreviousTableFormatting();
+
+	// if (input.value === '') {
+	// 	// alert('You need to enter a number to use the tax calculator.')
+	// 	for (i = 0; i < tableNetTaxColumn.length; i++) {
+	// 		tableNetTaxColumn[i].textContent = '';
+	// 	}
+	// 	//reset the table net income data
+	// 	for (i = 0; i < tableNetIncomeColumn.length; i++) {
+	// 		tableNetIncomeColumn[i].textContent = '';
+	// 	}
+	// 	input.focus();
+	// 	return
+	// } 
+
+	// if (!(Number(input.value) >= 0)) {
+	// 	alert('You need to enter a number to use the tax calculator.')
+	// 	input.value = '';
+	// 	input.focus();
+	// 	return
+	// }
+
+
 	grossIncome = input.value;
 	//here I need to add a conditional
 	//if monthlySalary.className = 'salary-on' do the monthly way
@@ -357,42 +364,6 @@ let chooseFunction = function(whichFunctions) {
 		} 
 
 	}
-	//check if userInput is a number
-	
-	//i tried to think how i would do it..
-	//then I looked it up..
-	//it seems like it is pretty easy to do, actually..
-	//just use .toLocaleString('en-US');
-	//I just took the $ out of the number above in each bracket's function
-	//so I'd have a pure number, and simply add the $ in after
-	//I do the localeString() method
-	let taxNumber = Number(totalTax.textContent).toLocaleString('en-US');
-	let incomeNumber = Number(totalIncome.textContent).toLocaleString('en-US');
-	//console.log(`Your net taxes are $${taxNumber}`)
-	totalTax.textContent =  `$${taxNumber}`;
-	totalIncome.textContent =  `$${incomeNumber}`;
-
-	//make the input text content have commas
-	//here I'm waiting until the function is actually carried
-	//before I check for an error and stop the function
-	//I need to find a way to test if the input value is not a number earlier
-	//input.value = `$${Number(grossIncome).toLocaleString('en-US')}`
-	
-	/*
-	//reset userInput
-	let noCommas = function() {
-		userInput = userInput.slice(userInput.indexOf('$')+1);
-		userInput = userInput.split(',');
-		let newUserInput = userInput[0];
-		for (i = 1; i < userInput.length; i++) {
-			newUserInput += userInput[i];
-		}
-		userInput = newUserInput;
-	}
-	*/
-	
-	
-	
 
 	//color the tax and income cells that have data
 	//note that tax and income are in two separate arrays
@@ -411,12 +382,30 @@ let chooseFunction = function(whichFunctions) {
 			tableNetIncomeColumn[i].className = 'no-income-data'
 		}
 	}
+
+	// reset the conversion tax and income
+	if (currencySelector.value === 'Default') {
+		foreignTax.textContent = '';
+		foreignIncome.textContent = '';
+		foreignTax.className = '';
+		foreignIncome.className = '';
+		// the lines below reset the currency converter
+		currencySelector.value = '';
+		yourIncome.textContent = '';
+		yourTax.textContent = '';
+	} else {
+		changeCurrencyWithMenuSelector();
+	}
+	
+
+	formatCurrentInputAsLocaleString();
 }	
 
-input.addEventListener('keyup', chooseFunction);
-input.addEventListener('keyup', formatInputValue);
-submit.addEventListener('click', chooseFunction);
+input.addEventListener('keyup', determineTaxBracketAndCalculate);
+// input.addEventListener('keyup', formatInputValue);
+submit.addEventListener('click', determineTaxBracketAndCalculate);
+// input.addEventListener('keyup', formatInputValue);
 
-setSalaryToAnnual();
+// setSalaryToAnnual();
 
 
