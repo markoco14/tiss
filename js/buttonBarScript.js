@@ -19,10 +19,10 @@ let changeCurrencyWithFlagSelector = function(e) {
 	}
 
 	//use net tax to calculate the corrected tax (tax in baseline euros)
-	const taxSetToEuro = netTax * 1/currencyData.rates.TWD; 
+	const totalTaxSetToEuro = netTax * 1/currencyData.rates.TWD; 
 
 	//use net income to calculate the corrected income (income in baseline euros)
-	const incomeSetToEuro = netIncome * 1/currencyData.rates.TWD;
+	const totalIncomeSetToEuro = netIncome * 1/currencyData.rates.TWD;
 
 	const selectedFlag = e.target.getAttribute('id');
 	switch (selectedFlag) {

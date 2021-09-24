@@ -1,3 +1,4 @@
+// create JSON object for tax bracket information
 const taxBracketInfo = [
 	{
 		"annualGrossIncomeMinimum": 0,
@@ -51,13 +52,14 @@ const taxBracketInfo = [
 	}
 ]
 
+// create references to the calculator input field and submit button
+// change these variables to inputIncome and submitIncome later
+// need to check the places where the code needs to change
 const input = document.getElementById('income');
 const submit = document.getElementById('submit');
 
-/*
-	monthly/annual salary logic
-*/
 
+// set up monthly/annual salary logic
 // create trackers for using monthly or annual salary
 let monthlySalaryIsActive = false;
 const monthlySalary = document.getElementById('salary-monthly');
@@ -106,6 +108,9 @@ let setSalaryToAnnual = function() {
 	}
 }
 
+// add click event listeners to toggle between monthly and annual salary
+// these functions change the view for the income range values in the
+// tax calculation results table
 monthlySalary.addEventListener('click', setSalaryToMonthly);
 annualSalary.addEventListener('click', setSalaryToAnnual);
 
@@ -127,6 +132,7 @@ const monthlyIncomeRangeArray = taxBracketInfo.map((element, i) => {
 });
 
 // make reference to income limit column and fill content
+// this sets the table income limit column to annual when the page loads
 const tableIncomeLimitColumn = document.querySelectorAll('.income-limit');
 // set default table income limit column
 for (i = 0; i < tableIncomeLimitColumn.length; i++) {
@@ -137,36 +143,51 @@ for (i = 0; i < tableIncomeLimitColumn.length; i++) {
 		}
 	}
 // make reference to tax rate column and fill content
+// this sets the tax rate values when the page loads
 const tableTaxRateColumn = document.querySelectorAll('.tax-rate');
 for (i = 0; i < tableTaxRateColumn.length; i++) {
 	tableTaxRateColumn[i].textContent = `${taxBracketInfo[i].taxRate*100}%`
 }
 
 // make reference to the net tax column
+// this reference is an array that contains reference to the
+// each row in the net tax value column
 const tableNetTaxColumn = document.querySelectorAll('.net-tax');
 
 // make reference to the net income column
+// this reference is an array that contains reference to the
+// each row in the net income value column
 const tableNetIncomeColumn = document.querySelectorAll('.net-income');
 
 
 // .map() taxBracketInfo to make tax rate array
+// this array will be used to calculate tax amounts at each income level
 const taxRatesArray = taxBracketInfo.map((element, i) => {
 	return taxBracketInfo[i].taxRate;
 });
 
 //intitalize totalTax and totalIncome variables
+// these values appear at the bottom of the tax-income table
+// and show the total amount of income a user will earn
+// and the total amount of tax
 const totalTax = document.getElementById('total-tax')
 const totalIncome = document.getElementById('total-income')
 
+
+// create global variable for gross income, net income, and net tax
 let grossIncome;
-// console.log(grossIncome)
 let netIncome;
 let netTax;
 
-// I think I can feed the calculateNetTaxAndNetIncome function
-// two more variables because I use the income range array (global)
-
+// create function to calculate net taxes and new income each time
+// the value of the income input changes
+// this function takes two values:
+// length = the length of the array to loop through
+// incomeRangeArray = the amount of income in each bracket
+// incomeRangeArray is set to monthly or annual
 let calculateNetTaxAndNetIncome = function(length, incomeRangeArray) {
+	// if the length = 1, we don't need to loop through any data
+	// calculations are computed below
 	if (length === 1) {
 		grossIncome = input.value;
 		//find the taxes
@@ -190,7 +211,7 @@ let calculateNetTaxAndNetIncome = function(length, incomeRangeArray) {
 		totalTax.textContent =  `$${taxNumber}`;
 		totalIncome.textContent =  `$${incomeNumber}`;
 	} 
-
+	// if the length > 1, we need to create an empty array using length
 	else {
 		let arrayLength = length;
 		grossIncome = input.value;
@@ -203,16 +224,23 @@ let calculateNetTaxAndNetIncome = function(length, incomeRangeArray) {
 		// console.log(grossIncomeArray);
 
 		// calculate gross income
+		// put income range values into the gross income array
 		for (i = 0; i < grossIncomeArray.length-1; i++) {
 			grossIncomeArray[i] = incomeRangeArray[i];
 		}
 		// console.log(grossIncomeArray);
-
+		// calculate the tracker value by adding together the values
+		// in the gross income array
 		for (i = 0; i < grossIncomeArray.length-1; i++) {
 			grossIncomeTracker += incomeRangeArray[i];
 			// console.log(grossIncomeTracker)
 		}
 
+		// find the remaining value to calculate the gross income in the
+		// highest bracket because this bracket hasn't been maxed out
+		// so it can't be read from the array, it needs to be calculated
+		// this is worth doing because we can now calculate all
+		// net income and net tax values with a single loop
 		grossIncomeArray[grossIncomeArray.length-1] = grossIncome - grossIncomeTracker;
 		// console.log(grossIncomeArray);
 
@@ -233,12 +261,13 @@ let calculateNetTaxAndNetIncome = function(length, incomeRangeArray) {
 		// console.log(netTaxArray)
 		
 		// calculate total net income
+		// add together all the values in the net income array
 		for (i = 0; i < netIncomeArray.length; i++) {
 			netIncome += netIncomeArray[i]
 		}
 
-
 		// calculate total net taxes
+		// add together all the values in the net tax array
 		for (i = 0; i < netTaxArray.length; i++) {
 			netTax += netTaxArray[i]
 		}
@@ -257,6 +286,9 @@ let calculateNetTaxAndNetIncome = function(length, incomeRangeArray) {
 	}
 }
 
+// function to clear the previous input value
+// needs to be reset everytime the user presses a key
+// so the user can always type in new values
 function cleanPreviousInputValue(input) {
 	while(input.value.includes(',') || input.value.includes('$')) {
 	    input.value = input.value.replace(',','');
@@ -264,6 +296,7 @@ function cleanPreviousInputValue(input) {
 	}
 }
 
+// function to clear the previous values from the net income and net tax columns
 function clearPreviousTableFormatting() {
 	for (i = 0; i < 6; i++) {
 		tableNetTaxColumn[i].textContent = '';
@@ -271,6 +304,7 @@ function clearPreviousTableFormatting() {
 	}
 }
 
+// function to add '$' and ',' to the input so it is easier to read
 function formatCurrentInputAsLocaleString() {
 	const chosenSalaryNumber = Number(input.value);
 	const chosenSalaryLocale = chosenSalaryNumber.toLocaleString('en-us');
@@ -281,6 +315,14 @@ function formatCurrentInputAsLocaleString() {
 	}
 }
 
+// function to read the input value and choose which tax brackets need to be calculated
+// this function:
+	// clears the previous input value
+	// clears previous table formatting
+	// determines if the calculations need to be based off monthly or annual
+	// determines the highest necessary tax bracket
+	// sets the length of the array accordingly
+	// completes the calculations and displays the values
 let determineTaxBracketAndCalculate = function() {
 
 	cleanPreviousInputValue(input);
@@ -371,7 +413,7 @@ let determineTaxBracketAndCalculate = function() {
 	//and affect both tax and income data cells
 	//I think this means that I probably need to make an array of objects
 	//this would let me hold multiple tax and net income and even range values for each bracket
-	//note that I am using the length of the tax array
+	//I am using the length of the tax array
 	//to loop through both the tax array and the net income array
 	for (i = 0; i < tableNetTaxColumn.length; i++) {
 		if (tableNetTaxColumn[i].textContent !== '') {

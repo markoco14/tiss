@@ -1,3 +1,4 @@
+// create reference to the 
 const foreignTax = document.getElementById('exchange-tax');
 const foreignIncome = document.getElementById('exchange-income');
 
@@ -9,28 +10,35 @@ const currencySelector = document.getElementById('select-currency');
 
 
 let changeCurrencyWithMenuSelector = function() {
+	// check for user errors
+	// the input value should not be empty.
+	// but maybe I should actually check for empty total income and total tax cells
 	if (input.value === '') {
 		alert('You need to enter a salary first before you can use the currency converter.')
 		input.focus();
 		return
 	}
 
-	
-	// convert net tax and net income to euro because that is baseline
-	const taxSetToEuro = netTax * 1/currencyData.rates.TWD; //this is EUR
-	const incomeSetToEuro = netIncome * 1/currencyData.rates.TWD; //this is EUR
+	// the current API uses Euro as the baseline (value of 1.0)
+	// to simplify further calculations we begin by converting
+	// the taiwanese income and tax amounts to euros
+	const totalTaxSetToEuro = netTax * 1/currencyData.rates.TWD; //this is EUR
+	const totalIncomeSetToEuro = netIncome * 1/currencyData.rates.TWD; //this is EUR
 
 	const selectedCurrency = currencySelector.value
-	//now I need to make that switch
-	//and the selector
+	// use a switch to choose which currency value to use
+	// each case should:
+		// calculate the tax in the chosen currency
+		// calculate the net income in the chosen currency
+		// change the image of the currency flag to match the chosen country
 	switch (selectedCurrency) {
 		case('CAD'):
 			//convert the taxes
-			const cadTax = taxSetToEuro * currencyData.rates.CAD;
+			const cadTax = totalTaxSetToEuro * currencyData.rates.CAD;
 			foreignTax.textContent = `$${Math.floor(cadTax).toLocaleString('en-US')}`;
 			yourTax.textContent = 'Canadian dollars'
 			//convert the income
-			const cadIncome = incomeSetToEuro *currencyData.rates.CAD;
+			const cadIncome = totalIncomeSetToEuro *currencyData.rates.CAD;
 			foreignIncome.textContent = `$${Math.floor(cadIncome).toLocaleString('en-US')}`;
 			yourIncome.textContent = 'Canadian dollars'
 			//set the classes
@@ -43,11 +51,11 @@ let changeCurrencyWithMenuSelector = function() {
 			break;
 		case('USD'):
 			//convert the taxes
-			const usdTax = taxSetToEuro * currencyData.rates.USD;
+			const usdTax = totalTaxSetToEuro * currencyData.rates.USD;
 			foreignTax.textContent = `$${Math.floor(usdTax).toLocaleString('en-US')}`;
 			yourTax.textContent = 'American dollars'
 			//convert the income
-			const usdIncome = incomeSetToEuro * currencyData.rates.USD;
+			const usdIncome = totalIncomeSetToEuro * currencyData.rates.USD;
 			foreignIncome.textContent = `$${Math.floor(usdIncome).toLocaleString('en-US')}`;
 			yourIncome.textContent = 'American dollars'
 			//set the classes
@@ -60,11 +68,11 @@ let changeCurrencyWithMenuSelector = function() {
 			break;
 		case('AUD'):
 			//convert the taxes
-			const audTax = taxSetToEuro * currencyData.rates.AUD;
+			const audTax = totalTaxSetToEuro * currencyData.rates.AUD;
 			foreignTax.textContent = `$${Math.floor(audTax).toLocaleString('en-US')}`;
 			yourTax.textContent = 'Australian dollars'
 			//convert the income
-			const audIncome = incomeSetToEuro * currencyData.rates.AUD;
+			const audIncome = totalIncomeSetToEuro * currencyData.rates.AUD;
 			foreignIncome.textContent = `$${Math.floor(audIncome).toLocaleString('en-US')}`;
 			yourIncome.textContent = 'Australian dollars'
 			//set the classes
@@ -77,11 +85,11 @@ let changeCurrencyWithMenuSelector = function() {
 			break;
 		case('GBP'):
 			//convert the taxes
-			const gbpTax = taxSetToEuro * currencyData.rates.GBP;
+			const gbpTax = totalTaxSetToEuro * currencyData.rates.GBP;
 			foreignTax.textContent = `\u00a3${Math.floor(gbpTax).toLocaleString('en-US')}`;
 			yourTax.textContent = 'British pounds'
 			//convert the income
-			const gbpIncome = incomeSetToEuro * currencyData.rates.GBP;
+			const gbpIncome = totalIncomeSetToEuro * currencyData.rates.GBP;
 			foreignIncome.textContent = `\u00a3${Math.floor(gbpIncome).toLocaleString('en-US')}`;
 			yourIncome.textContent = 'British pounds'
 			//set the classes
@@ -94,11 +102,11 @@ let changeCurrencyWithMenuSelector = function() {
 			break;
 		case('EUR'): //Note the european exchange rate is 1.
 			//convert the taxes
-			const eurTax = taxSetToEuro * currencyData.rates.EUR;
+			const eurTax = totalTaxSetToEuro * currencyData.rates.EUR;
 			foreignTax.textContent = `\u20ac${Math.floor(eurTax).toLocaleString('en-US')}`;
 			yourTax.textContent = 'Euros'
 			//convert the income
-			const eurIncome = incomeSetToEuro * currencyData.rates.EUR;
+			const eurIncome = totalIncomeSetToEuro * currencyData.rates.EUR;
 			foreignIncome.textContent = `\u20ac${Math.floor(eurIncome).toLocaleString('en-US')}`;
 			yourIncome.textContent = 'Euros'
 			//set the classes
@@ -111,11 +119,11 @@ let changeCurrencyWithMenuSelector = function() {
 			break;
 		case('NZD'):
 			//convert the taxes
-			const nzdTax = taxSetToEuro * currencyData.rates.NZD;
+			const nzdTax = totalTaxSetToEuro * currencyData.rates.NZD;
 			foreignTax.textContent = `$${Math.floor(nzdTax).toLocaleString('en-US')}`;
 			yourTax.textContent = 'New Zealand dollars'
 			//convert the income
-			const nzdIncome = incomeSetToEuro * currencyData.rates.NZD;
+			const nzdIncome = totalIncomeSetToEuro * currencyData.rates.NZD;
 			foreignIncome.textContent = `$${Math.floor(nzdIncome).toLocaleString('en-US')}`;
 			yourIncome.textContent = 'New Zealand dollars'
 			//set the classes
